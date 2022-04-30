@@ -1,12 +1,9 @@
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class Cell {
     private int token = 99;
-    private int coordinateX;
-    private int coordinateY;
-
-    Cell(int i ,int j){
-        coordinateX = i;
-        coordinateY = j;
-    }
+    Logger logger = LogManager.getLogger();
 
     public int getToken(){
         return token;
@@ -15,9 +12,10 @@ public class Cell {
     public boolean placeToken(int token){
         if(this.token==99) {
             this.token=token;
+            logger.info("Token placed to the cell successfully");
             return true;
         }else{
-            System.out.print("Error placing in the full square");
+            logger.debug("Error placing in the full cell");
             return false;
         }
 

@@ -1,20 +1,25 @@
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class OneVsZeroModel {
+    //logger
+    Logger logger = LogManager.getLogger();
+
     //board
     Cell[][] board = new Cell[3][3];
     public OneVsZeroModel(){
         for(int i = 0;i<3;i++){
             for(int j = 0 ; j<3;j++){
-                board[i][j] = new Cell(i,j);
+                board[i][j] = new Cell();
             }
         }
     }
 
     //Config for the game data.
-    LocalDateTime startTime = LocalDateTime.now();
+    LocalDateTime startTime;
     private Map<String,Integer> players = new HashMap<String,Integer>();
     private String player1;
     private String player2;
@@ -29,6 +34,7 @@ public class OneVsZeroModel {
 
     //Choose who is the first to play
     public void decidePlayerOrder(String player1,String player2){
+        startTime = LocalDateTime.now();
         this.player1 = player1;
         this.player2 = player2;
         int randomDecision = (int)Math.round(Math.random());
@@ -39,16 +45,10 @@ public class OneVsZeroModel {
         }else{
             currentPlayer = player2;
         }
-
-        System.out.print("First player is" + currentPlayer);
+        logger.info("First player is {}",currentPlayer);
+        logger.info("Start time is {}",startTime);
     }
 
-    public int getTokenForText(){
-        if(!gameIsNotOver){
-            return -1;
-        }
-        return players.get(currentPlayer);
-    }
 
     public void draw(){
         for(int i =0 ; i<board.length;i++){
@@ -58,34 +58,35 @@ public class OneVsZeroModel {
             System.out.print("\n");
         }
     }
-    public void placeNumber(int x,int y) {
-
+    public int placeNumber(int x,int y) {
         if (!gameIsNotOver) {
-            return;
+            logger.debug("Game is over - game is stopped");
+            return -1;
         }
         if (board[x][y].placeToken(Integer.valueOf(players.get(currentPlayer)))) {
             if (checkIsWin(x,y)) {
                 winner = currentPlayer;
-                System.out.println("WInner is " + winner);
+                logger.info("Winner is {}",winner);
                 gameIsNotOver = false;
-                return;
             }
-
             if (checkIsFull()) {
-                System.out.println("Draw - no winner");
+                logger.info("Draw - table is full and none of the players win");
                 gameIsNotOver = false;
-                return;
             }
-
             if (currentPlayer.equals(player1)) {
                 currentPlayer = player2;
                 player1Count++;
+                draw();
             } else {
                 currentPlayer = player1;
                 player2Count++;
+                draw();
             }
+            return board[x][y].getToken();
+        }else{
+            return -1;
         }
-        draw();
+
     }
     private boolean checkIsFull () {
         for (int i = 0; i < board.length; i++) {

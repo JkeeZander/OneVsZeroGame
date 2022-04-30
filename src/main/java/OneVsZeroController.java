@@ -3,7 +3,6 @@ import javafx.scene.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
@@ -13,10 +12,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.fxml.FXML;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 public class OneVsZeroController {
+    //logger
+    Logger logger = LogManager.getLogger();
+
     OneVsZeroModel model;
     @FXML
     TextField player1Field;
@@ -36,9 +39,11 @@ public class OneVsZeroController {
         if(!player1.isBlank() && !player2.isBlank() && !player1.equals(player2)){
             model.decidePlayerOrder(player1,player2);
             pane.setCenter(displayGrid());
+            logger.info("Game started!");
+        }else{
+            logger.error("Player name(s) is(are) blank or player names are identical");
         }
     }
-
 
     private GridPane displayGrid(){
         GridPane pane = new GridPane();
@@ -55,6 +60,7 @@ public class OneVsZeroController {
         pane.setOnMouseClicked(e->handleClick(e));
         return pane;
     }
+
     private void handleClick(MouseEvent event){
         Pane pane = (Pane) event.getSource();
         int row = GridPane.getRowIndex(pane);
@@ -62,54 +68,12 @@ public class OneVsZeroController {
         Text text = new Text();
         text.setX(pane.getHeight()/2);
         text.setY(pane.getWidth()/2);
-        int token = model.getTokenForText();
+        int token = model.placeNumber(row,column);
         if(token!=-1) {
             text.setText(String.valueOf(token));
             pane.getChildren().add(text);
         }
-        model.placeNumber(row,column);
-
 
     }
-
-
-/*
-    public class Cell extends Pane{
-        private int token = 99;
-        private int coordinateX;
-        private int coordinateY;
-
-        Cell(int i ,int j){
-            this.setPrefSize(150,150);
-            setStyle("-fx-border-color: black");
-            this.setOnMouseClicked(e->handleClick());
-            coordinateX = i;
-            coordinateY = j;
-        }
-
-        public int getToken(){
-            return token;
-        }
-        ///for every cell
-        this.setPrefSize(150,150);
-        setStyle("-fx-border-color: black");
-        this.setOnMouseClicked(e->handleClick());
-
-        private void handleClick(){
-
-
-        }
-
-//place token
-         /*           this.token=token;
-       // Text text = new Text();
-            text.setX(this.getHeight()/2);
-            text.setY(this.getWidth()/2);
-            text.setText(String.valueOf(token));
-            this.getChildren().add(text);
-
-          */
-
-
 }
 
