@@ -29,10 +29,20 @@ public class OneVsZeroController {
     Button submitPlayerNames;
     @FXML
     BorderPane pane;
+
+    /**
+     * initialize model for further deployment. THe model has a board represented as an array
+     * that will be used for controlling the game
+     * @author Altan Dzhumaev
+     */
     public OneVsZeroController(){
         model = new OneVsZeroModel();
     }
 
+    /**
+     * Handles beginning of the game, displaying the game board and passing configuration information
+     * (player names) to the model
+     */
     public void handleIntro(){
         String player1 = player1Field.getText();
         String player2 = player2Field.getText();
@@ -45,6 +55,10 @@ public class OneVsZeroController {
         }
     }
 
+    /**
+     * creates a game board and displays it when passed to the scene
+     * @return a GridPane that will contain the game board
+     */
     private GridPane displayGrid(){
         GridPane pane = new GridPane();
         for (int i = 0; i < 3; i++)
@@ -53,6 +67,10 @@ public class OneVsZeroController {
         return pane;
     }
 
+    /**
+     * UI configuration for each cell. Sets design and size for the cell and places handle for click
+     * @return a pane which represents cell
+     */
     private Pane createCell(){
         Pane pane = new Pane();
         pane.setPrefSize(150,150);
@@ -61,6 +79,10 @@ public class OneVsZeroController {
         return pane;
     }
 
+    /**
+     * Handles click on the cell, placing token based on the current player move.
+     * @param event an event that activates when the user presses on the cell
+     */
     private void handleClick(MouseEvent event){
         Pane pane = (Pane) event.getSource();
         int row = GridPane.getRowIndex(pane);

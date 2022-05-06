@@ -10,6 +10,10 @@ public class OneVsZeroModel {
 
     //board
     Cell[][] board = new Cell[3][3];
+
+    /**
+     * initialize the board with empty cells(99)
+     */
     public OneVsZeroModel(){
         for(int i = 0;i<3;i++){
             for(int j = 0 ; j<3;j++){
@@ -20,7 +24,7 @@ public class OneVsZeroModel {
 
     //Config for the game data.
     LocalDateTime startTime;
-    private Map<String,Integer> players = new HashMap<String,Integer>();
+    public Map<String,Integer> players = new HashMap<String,Integer>();
     private String player1;
     private String player2;
     private String winner;
@@ -30,9 +34,14 @@ public class OneVsZeroModel {
 
     private boolean gameIsNotOver = true;
 
-    private String currentPlayer;
+    public String currentPlayer;
 
-    //Choose who is the first to play
+    /**
+     * Randomly decides which player goes first and stores it.
+     * @param player1 is the player's name
+     * @param player2 is other player's name
+     * @author Altan Dzhumaev
+     */
     public void decidePlayerOrder(String player1,String player2){
         startTime = LocalDateTime.now();
         this.player1 = player1;
@@ -49,7 +58,10 @@ public class OneVsZeroModel {
         logger.info("Start time is {}",startTime);
     }
 
-
+    /**
+     * draws the current state of the board where 99 is empty,0 is 0 and 1 is 1
+     * @author Altan Dzhumaev
+     */
     public void draw(){
         for(int i =0 ; i<board.length;i++){
             for(int j = 0 ;j<board.length;j++){
@@ -58,6 +70,15 @@ public class OneVsZeroModel {
             System.out.print("\n");
         }
     }
+
+    /**
+     * places number depending on the order of the players
+     * Also checks if the game is over or who is the winner if the game ended with someone's win
+     * @param x is a x coordinate on the board
+     * @param y is a y coordinate on the board
+     * @return a number that was placed on the given coordinates(the number of the current player)
+     * @author Altan Dzhumaev
+     */
     public int placeNumber(int x,int y) {
         if (!gameIsNotOver) {
             logger.debug("Game is over - game is stopped");
@@ -88,6 +109,12 @@ public class OneVsZeroModel {
         }
 
     }
+
+    /**
+     * checks if the board is full and if it is full then the game is over
+     * @return a boolean value that indicates if the board is full
+     * @author Altan Dzhumaev
+     */
     private boolean checkIsFull () {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
@@ -99,6 +126,13 @@ public class OneVsZeroModel {
         return true;
     }
 
+    /**
+     * checks if the game is won by any of the players. If yes, the last player who did the move wins
+     * @param coordinateX an x coordinate on the board
+     * @param coordinateY a y coordinate on the board
+     * @return a boolean that indicates if the game is won or not
+     * @author Altan Dzhumaev
+     */
     private boolean checkIsWin (int coordinateX,int coordinateY) {
         int row;
         int column;
