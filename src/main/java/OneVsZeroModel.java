@@ -1,12 +1,31 @@
+import java.io.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.core.JsonGenerator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 
 public class OneVsZeroModel {
     //logger
     Logger logger = LogManager.getLogger();
+
+
+    //Config for the game data.
+    public Map<String,Integer> players = new HashMap<String,Integer>();
+    private String player1;
+    private String player2;
+    private String winner;
+    public String currentPlayer;
+    private int player1Count = 0;
+    private int player2Count = 0;
+    GameInfo gameStatistics = new GameInfo();
+    private boolean gameIsNotOver = true;
 
     //board
     Cell[][] board = new Cell[3][3];
@@ -22,19 +41,7 @@ public class OneVsZeroModel {
         }
     }
 
-    //Config for the game data.
-    LocalDateTime startTime;
-    public Map<String,Integer> players = new HashMap<String,Integer>();
-    private String player1;
-    private String player2;
-    private String winner;
 
-    private int player1Count = 0;
-    private int player2Count = 0;
-
-    private boolean gameIsNotOver = true;
-
-    public String currentPlayer;
 
     /**
      * Randomly decides which player goes first and stores it.
@@ -43,9 +50,11 @@ public class OneVsZeroModel {
      * @author Altan Dzhumaev
      */
     public void decidePlayerOrder(String player1,String player2){
-        startTime = LocalDateTime.now();
         this.player1 = player1;
         this.player2 = player2;
+        gameStatistics.setStartOfGame(LocalDateTime.now());
+        gameStatistics.setPlayer1(player1);
+        gameStatistics.setPlayer2(player2);
         int randomDecision = (int)Math.round(Math.random());
         players.put(player1,Integer.valueOf(0));
         players.put(player2,Integer.valueOf(1));
@@ -55,7 +64,7 @@ public class OneVsZeroModel {
             currentPlayer = player2;
         }
         logger.info("First player is {}",currentPlayer);
-        logger.info("Start time is {}",startTime);
+        logger.info("Start time is {}",LocalDateTime.now());
     }
 
     /**
@@ -74,6 +83,7 @@ public class OneVsZeroModel {
     /**
      * places number depending on the order of the players
      * Also checks if the game is over or who is the winner if the game ended with someone's win
+     * Stores the
      * @param x is a x coordinate on the board
      * @param y is a y coordinate on the board
      * @return a number that was placed on the given coordinates(the number of the current player)
@@ -85,10 +95,13 @@ public class OneVsZeroModel {
             return -1;
         }
         if (board[x][y].placeToken(Integer.valueOf(players.get(currentPlayer)))) {
+
             if (checkIsWin(x,y)) {
                 winner = currentPlayer;
                 logger.info("Winner is {}",winner);
                 gameIsNotOver = false;
+                gameStatistics.setWinner(winner);
+
             }
             if (checkIsFull()) {
                 logger.info("Draw - table is full and none of the players win");
@@ -97,11 +110,15 @@ public class OneVsZeroModel {
             if (currentPlayer.equals(player1)) {
                 currentPlayer = player2;
                 player1Count++;
-                draw();
             } else {
                 currentPlayer = player1;
                 player2Count++;
-                draw();
+            }
+            draw();
+            gameStatistics.setPlayer1MovesCount(player1Count);
+            gameStatistics.setPlayer2MovesCount(player2Count);
+            if(!gameIsNotOver) {
+                JsonFileWriterReader.getInstance().appendToList(gameStatistics);
             }
             return board[x][y].getToken();
         }else{
@@ -125,6 +142,8 @@ public class OneVsZeroModel {
         }
         return true;
     }
+
+
 
     /**
      * checks if the game is won by any of the players. If yes, the last player who did the move wins
@@ -159,7 +178,4 @@ public class OneVsZeroModel {
         }
         return false;
     }
-
-
-
 }

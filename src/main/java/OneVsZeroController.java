@@ -12,8 +12,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.fxml.FXML;
+import java.util.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.List;
 
 
 public class OneVsZeroController {
@@ -29,6 +32,16 @@ public class OneVsZeroController {
     Button submitPlayerNames;
     @FXML
     BorderPane pane;
+    @FXML
+    GridPane statBar;
+
+    @FXML
+    public void initialize(){
+        List<Map.Entry<String,Integer>> list = JsonFileWriterReader.getInstance().getTopScoreList();
+        for(int i = 0 ;i<list.size();i++){
+            statBar.add(new Text(list.get(i).toString()),i,0);
+        }
+    }
 
     /**
      * initialize model for further deployment. THe model has a board represented as an array
