@@ -1,9 +1,8 @@
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 public class Cell {
     private int token = 99;
-    Logger logger = LogManager.getLogger();
+
 
     public int getToken(){
         return token;
@@ -17,10 +16,10 @@ public class Cell {
     public boolean placeToken(int token){
         if(this.token==99) {
             this.token=token;
-            logger.info("Token placed to the cell successfully");
+            Logger.info("Token placed successfully");
             return true;
         }else{
-            logger.debug("Error placing in the full cell");
+            Logger.info("Cannot place token in the full square");
             return false;
         }
 

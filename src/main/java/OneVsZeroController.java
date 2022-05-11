@@ -1,4 +1,3 @@
-import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -11,17 +10,21 @@ import javafx.scene.text.Text;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.fxml.FXML;
-import java.util.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import org.tinylog.Logger;
 import java.util.List;
 
 
 public class OneVsZeroController {
-    //logger
-    Logger logger = LogManager.getLogger();
+    //Music background
+    Media media = new Media(getClass().getResource("minecraft.mp3").toString());
+    MediaPlayer mediaPlayer = new MediaPlayer(media);
 
     OneVsZeroModel model;
     @FXML
@@ -39,8 +42,10 @@ public class OneVsZeroController {
     public void initialize(){
         List<Map.Entry<String,Integer>> list = JsonFileWriterReader.getInstance().getTopScoreList();
         for(int i = 0 ;i<list.size();i++){
-            statBar.add(new Text(list.get(i).toString()),i,0);
+            statBar.add(new Text("Name: "+list.get(i).getKey() + "\nScore: " + list.get(i).getValue()),i,0);
         }
+        mediaPlayer.play();
+        Logger.info("Creating the scene and calling initalize method to show the statistics");
     }
 
     /**
@@ -61,10 +66,11 @@ public class OneVsZeroController {
         String player2 = player2Field.getText();
         if(!player1.isBlank() && !player2.isBlank() && !player1.equals(player2)){
             model.decidePlayerOrder(player1,player2);
-            pane.setCenter(displayGrid());
-            logger.info("Game started!");
+            displayGrid(pane);
+            pane.setBottom(createButton(pane));
+            Logger.info("Game started!");
         }else{
-            logger.error("Player name(s) is(are) blank or player names are identical");
+            Logger.error("Player name(s) is(are) blank or player names are identical");
         }
     }
 
@@ -72,12 +78,21 @@ public class OneVsZeroController {
      * creates a game board and displays it when passed to the scene
      * @return a GridPane that will contain the game board
      */
-    private GridPane displayGrid(){
-        GridPane pane = new GridPane();
+    private void displayGrid(BorderPane pane){
+        GridPane gridpane = new GridPane();
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
-                pane.add(createCell(), i, j);
-        return pane;
+                gridpane.add(createCell(), i, j);
+        pane.setCenter(gridpane);
+    }
+
+    private Button createButton(BorderPane pane){
+        Button button = new Button("Restart");
+        button.setOnAction(e->{
+            model.restart();
+            displayGrid(pane);
+        });
+        return button;
     }
 
     /**

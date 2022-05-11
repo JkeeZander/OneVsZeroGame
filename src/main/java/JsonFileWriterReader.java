@@ -1,10 +1,11 @@
 import java.io.*;
 import java.util.*;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.tinylog.Logger;
+
 
 public class JsonFileWriterReader {
     private File file = new File("gameStat.json");
@@ -16,6 +17,12 @@ public class JsonFileWriterReader {
     public static JsonFileWriterReader getInstance(){
         return writerReader;
     }
+
+    /**
+     * Creates a json file with list of game information. If the file already exists, the list is appended with the new infromation.
+     * @param info a GameInfo object that contains information about game that will be stored in json
+     * @author Altan Dzhumaev
+     */
     public void appendToList(GameInfo info){
         try{
             List<GameInfo> statisticsList = new ArrayList<GameInfo>();
@@ -26,10 +33,17 @@ public class JsonFileWriterReader {
             FileWriter writer = new FileWriter(file);
             statisticsList.add(info);
             mapper.writeValue(writer,statisticsList);
+            Logger.info("Writing to the file");
         }catch (Exception e){
-            e.printStackTrace();
+            Logger.error(e.getStackTrace());
         }
     }
+
+    /**
+     * Traverses json file and build a list of 5 players with the most scores.
+     * @return key value list pair that contains top 5 players with most wins
+     * @author Altan Dzhumaev
+     */
     public List<Map.Entry<String,Integer>> getTopScoreList(){
         Map<String,Integer> statisticsMap = new HashMap<>();
         try(FileReader reader = new FileReader(file)){

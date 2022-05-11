@@ -7,13 +7,11 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.core.JsonGenerator;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
+
 
 
 public class OneVsZeroModel {
-    //logger
-    Logger logger = LogManager.getLogger();
 
 
     //Config for the game data.
@@ -39,6 +37,7 @@ public class OneVsZeroModel {
                 board[i][j] = new Cell();
             }
         }
+        Logger.info("Game started");
     }
 
 
@@ -56,16 +55,33 @@ public class OneVsZeroModel {
         gameStatistics.setPlayer1(player1);
         gameStatistics.setPlayer2(player2);
         int randomDecision = (int)Math.round(Math.random());
-        players.put(player1,Integer.valueOf(0));
-        players.put(player2,Integer.valueOf(1));
+        players.put(player1,Integer.valueOf(randomDecision));
+        players.put(player2,Integer.valueOf(1-randomDecision));
+        randomDecision = (int)Math.round(Math.random());
         if(randomDecision==0){
             currentPlayer = player1;
         }else{
             currentPlayer = player2;
         }
-        logger.info("First player is {}",currentPlayer);
-        logger.info("Start time is {}",LocalDateTime.now());
+        Logger.info("The first player is {}", currentPlayer);
+        Logger.info("The start time of the game is {}",LocalDateTime.now());
     }
+
+    /**
+     * Restarts the game, flushing the board but the player data stays the same.
+     */
+    public void restart(){
+        decidePlayerOrder(player1,player2);
+        gameIsNotOver = true;
+        winner = null;
+        for(int i = 0;i<3;i++){
+            for(int j = 0 ; j<3;j++){
+                board[i][j] = new Cell();
+            }
+        }
+        Logger.info("Game restarted!");
+    }
+
 
     /**
      * draws the current state of the board where 99 is empty,0 is 0 and 1 is 1
@@ -91,20 +107,20 @@ public class OneVsZeroModel {
      */
     public int placeNumber(int x,int y) {
         if (!gameIsNotOver) {
-            logger.debug("Game is over - game is stopped");
+            Logger.debug("Game is over - game is stopped");
             return -1;
         }
         if (board[x][y].placeToken(Integer.valueOf(players.get(currentPlayer)))) {
 
             if (checkIsWin(x,y)) {
                 winner = currentPlayer;
-                logger.info("Winner is {}",winner);
+                Logger.info("Winner is {}",winner);
                 gameIsNotOver = false;
                 gameStatistics.setWinner(winner);
 
             }
             if (checkIsFull()) {
-                logger.info("Draw - table is full and none of the players win");
+                Logger.info("Draw - table is full and none of the players win");
                 gameIsNotOver = false;
             }
             if (currentPlayer.equals(player1)) {
@@ -140,6 +156,7 @@ public class OneVsZeroModel {
                 }
             }
         }
+        Logger.debug("Game board is full");
         return true;
     }
 

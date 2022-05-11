@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="OneVsZeroController">
+<BorderPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="OneVsZeroController">
    <center>
       <GridPane hgap="10.0" vgap="10.0" BorderPane.alignment="CENTER">
         <columnConstraints>
@@ -29,7 +29,7 @@
          <children>
             <TextField fx:id="player1Field" GridPane.rowIndex="1" />
             <TextField fx:id="player2Field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Button fx:id="submitPlayerNames" mnemonicParsing="false" onAction="#handleIntro" text="Button" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+            <Button fx:id="submitPlayerNames" mnemonicParsing="false" onAction="#handleIntro" text="Start" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
             <GridPane fx:id="statBar" gridLinesVisible="true" prefHeight="0.0" prefWidth="0.0" GridPane.columnSpan="2147483647">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="317.600048828125" minWidth="10.0" prefWidth="300.7999755859375" />
