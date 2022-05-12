@@ -3,6 +3,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=maven,intellij+all,eclipse,netbeans
 gameStat.json
 ### Eclipse ###
+Onevszero.iml
 .metadata
 bin/
 tmp/
