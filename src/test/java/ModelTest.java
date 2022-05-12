@@ -1,3 +1,4 @@
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -38,5 +39,13 @@ class ModelTest {
         assertEquals("99 99 99 \n99 99 "+current + " \n99 99 99 \n",outputStreamCaptor.toString());
     }
 
+    @Test
+    void testRestart(){
+        System.setOut(new PrintStream(outputStreamCaptor));
+        model.restart();
+        outputStreamCaptor.reset();
+        model.draw();
+        assertEquals("99 99 99 \n99 99 99 \n99 99 99 \n",outputStreamCaptor.toString());
+    }
 
 }

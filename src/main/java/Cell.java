@@ -1,15 +1,17 @@
 import org.tinylog.Logger;
 
+/**
+ * A class that represents a cell on the board that works like a structure for keeping the tokens.
+ */
 public class Cell {
     private int token = 99;
-
 
     public int getToken(){
         return token;
     }
 
     /**
-     * stores the token(number) inside the cell if it is empty
+     * Stores the token(number) inside the cell if it is empty.
      * @param token a number that is placed in the cell
      * @return a boolean if the operation was successful
      */

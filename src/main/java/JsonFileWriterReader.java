@@ -1,3 +1,5 @@
+
+
 import java.io.*;
 import java.util.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,7 +8,9 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.tinylog.Logger;
 
-
+/**
+ * A singleton class that provides writing and reading functions for the data.
+ */
 public class JsonFileWriterReader {
     private File file = new File("gameStat.json");
     private ObjectMapper mapper = new ObjectMapper();
@@ -14,14 +18,19 @@ public class JsonFileWriterReader {
     private JsonFileWriterReader(){
         mapper.registerModule(new JavaTimeModule());
     }
+
+    /**
+     * Singleton representation of the file writer.
+     * @return single static object for writing and reading JSON file.
+     */
     public static JsonFileWriterReader getInstance(){
         return writerReader;
     }
 
     /**
      * Creates a json file with list of game information. If the file already exists, the list is appended with the new infromation.
-     * @param info a GameInfo object that contains information about game that will be stored in json
      * @author Altan Dzhumaev
+     * @param info a GameInfo object that contains information about game that will be stored in json
      */
     public void appendToList(GameInfo info){
         try{
@@ -41,8 +50,8 @@ public class JsonFileWriterReader {
 
     /**
      * Traverses json file and build a list of 5 players with the most scores.
-     * @return key value list pair that contains top 5 players with most wins
      * @author Altan Dzhumaev
+     * @return key value list pair that contains top 5 players with most wins
      */
     public List<Map.Entry<String,Integer>> getTopScoreList(){
         Map<String,Integer> statisticsMap = new HashMap<>();
@@ -58,7 +67,7 @@ public class JsonFileWriterReader {
             });
 
         }catch(Exception e){
-            e.printStackTrace();
+            Logger.error(e.getStackTrace());
         }
         return sortMap(statisticsMap).stream().limit(5).toList();
     }

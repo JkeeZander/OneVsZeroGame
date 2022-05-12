@@ -1,3 +1,5 @@
+
+
 import javafx.scene.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -20,7 +22,9 @@ import java.util.Map;
 import org.tinylog.Logger;
 import java.util.List;
 
-
+/**
+ * Controller class that provides interface between UI and model.
+ */
 public class OneVsZeroController {
     //Music background
     Media media = new Media(getClass().getResource("minecraft.mp3").toString());
@@ -39,27 +43,28 @@ public class OneVsZeroController {
     GridPane statBar;
 
     @FXML
+    /**
+     * Sets up top score list in the UI and plays the music.
+     */
     public void initialize(){
         List<Map.Entry<String,Integer>> list = JsonFileWriterReader.getInstance().getTopScoreList();
         for(int i = 0 ;i<list.size();i++){
             statBar.add(new Text("Name: "+list.get(i).getKey() + "\nScore: " + list.get(i).getValue()),i,0);
         }
         mediaPlayer.play();
-        Logger.info("Creating the scene and calling initalize method to show the statistics");
+        Logger.info("Creating the scene and calling initialize method to show the statistics");
     }
 
     /**
-     * initialize model for further deployment. THe model has a board represented as an array
-     * that will be used for controlling the game
      * @author Altan Dzhumaev
+     * Initialize model for further deployment. THe model has a board represented as an array that will be used for controlling the game.
      */
     public OneVsZeroController(){
         model = new OneVsZeroModel();
     }
 
     /**
-     * Handles beginning of the game, displaying the game board and passing configuration information
-     * (player names) to the model
+     * Handles beginning of the game, displaying the game board and passing configuration information (player names) to the model.
      */
     public void handleIntro(){
         String player1 = player1Field.getText();
@@ -75,8 +80,8 @@ public class OneVsZeroController {
     }
 
     /**
-     * creates a game board and displays it when passed to the scene
-     * @return a GridPane that will contain the game board
+     * Creates a game board and displays it when passed to the scene.
+     * @param pane a pane object that will be used to display the grid.
      */
     private void displayGrid(BorderPane pane){
         GridPane gridpane = new GridPane();
@@ -96,7 +101,7 @@ public class OneVsZeroController {
     }
 
     /**
-     * UI configuration for each cell. Sets design and size for the cell and places handle for click
+     * UI configuration for each cell. Sets design and size for the cell and places handle for click.
      * @return a pane which represents cell
      */
     private Pane createCell(){

@@ -1,3 +1,5 @@
+
+
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -5,6 +7,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * Application class for configuring javafx.
+ */
 public class OneVsZeroApplication extends Application {
 
     @Override
